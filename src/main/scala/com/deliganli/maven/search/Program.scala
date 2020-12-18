@@ -89,7 +89,7 @@ object Program {
           Applicative[F].unit
             .flatMap(_ => env.terminal.readChar.map(string2UserEvent))
             .flatMap(_.fold(terminate, proceed))
-            .map(e => interpret(env, state)(e))
+            .flatMap(e => interpret(env, state)(e))
 
         case Search(page) =>
           def updateCache(m: MavenModel) =
