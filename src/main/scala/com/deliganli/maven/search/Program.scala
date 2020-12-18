@@ -1,8 +1,6 @@
 package com.deliganli.maven.search
 
-import cats.data.Validated
 import cats.effect.concurrent.Ref
-import cats.effect.{ConcurrentEffect, ContextShift, Sync, Timer}
 import cats.implicits._
 import cats.{Applicative, Monad}
 import com.deliganli.maven.search.Domain.MavenModel
@@ -31,40 +29,6 @@ object Program {
 
   case class State(page: Int, docs: List[MavenDoc])
 
-  def instance[F[_]: ConcurrentEffect: ContextShift: Timer](params: Params): F[Unit] = {
-    Environment
-      .create(params)
-      .use(entrypoint[F])
-      .widen
-  }
-
-  def entrypoint[F[_]: Sync](env: Environment[F]): F[Unit] = {
-    implicit val C: Clipboard[F] = env.clipboard
-    implicit val T: Terminal[F]  = env.terminal
-
-    Applicative[F].unit
-      .flatMap(_ => Ref.of(State(0, Nil)))
-      .flatMap(cache => interpret(env, cache)(ProgramEvent.Search(1)))
-  }
-
-  def string2UserEvent(s: String): Validated[String, UserEvent] =
-    s match {
-      case s if s == "n" || s == "N" => UserEvent.Next.valid
-      case s if s == "p" || s == "P" => UserEvent.Prev.valid
-      case s                         => s.toIntOption.map(UserEvent.Selection).toValid(s)
-    }
-
-  def transformEvent[F[_]](env: Environment[F], state: State)(e: UserEvent): ProgramEvent = {
-    def expected: PartialFunction[UserEvent, ProgramEvent] = {
-      case UserEvent.Next if state.docs.size > state.page * env.config.itemPerPage => Move(state.page + 1)
-      case UserEvent.Next if state.docs.size % env.config.itemPerPage == 0 => Search(state.page + 1)
-      case UserEvent.Prev if state.page > 1 => Move(state.page - 1)
-      case UserEvent.Selection(i)           => Copy(i)
-    }
-
-    expected.applyOrElse[UserEvent, ProgramEvent](e, _ => Exit)
-  }
-
   def interpret[F[_]: Monad](
     env: Environment[F],
     state: Ref[F, State]
@@ -73,13 +37,13 @@ object Program {
   ): F[Unit] = {
     Applicative[F]
       .pure(event)
-      .flatTap(e => env.logger.info(e.toString))
+      .flatTap(e => env.logger.debug(e.toString))
       .flatMap {
         case Prompt =>
           def proceed(e: UserEvent): F[ProgramEvent] =
             state.get
-              .flatTap(s => env.logger.info(s"size: ${s.docs.size}, page:${s.page}"))
-              .map(s => transformEvent(env, s)(e))
+              .flatTap(s => env.logger.debug(s"size: ${s.docs.size}, page:${s.page}"))
+              .map(s => env.transformer.userToProgram(s)(e))
 
           def terminate(e: String): F[ProgramEvent] =
             env.terminal
@@ -87,12 +51,12 @@ object Program {
               .as(Exit)
 
           Applicative[F].unit
-            .flatMap(_ => env.terminal.readChar.map(string2UserEvent))
+            .flatMap(_ => env.terminal.readChar.map(env.transformer.stringToUserEvent))
             .flatMap(_.fold(terminate, proceed))
             .flatMap(e => interpret(env, state)(e))
 
         case Search(page) =>
-          def updateCache(m: MavenModel) =
+          def updateCache(m: MavenModel): F[Unit] =
             state.update { s =>
               val cursor = s.page * env.config.itemPerPage
               if (cursor < s.docs.size) s.copy(page = page)

@@ -1,8 +1,10 @@
 package com.deliganli.maven.search
 
 import cats.Applicative
-import cats.effect.{ConcurrentEffect, ContextShift, ExitCode, IO, IOApp, Timer}
+import cats.effect.concurrent.Ref
+import cats.effect.{ConcurrentEffect, ContextShift, ExitCode, IO, IOApp, Sync, Timer}
 import cats.implicits._
+import com.deliganli.maven.search.Program.{ProgramEvent, State}
 
 object Main extends IOApp {
 
@@ -11,7 +13,21 @@ object Main extends IOApp {
   def composition[F[_]: ConcurrentEffect: ContextShift: Timer](args: List[String]): F[ExitCode] = {
     Applicative[F].unit
       .flatMap(_ => Params.parse[F](args))
-      .flatMap(_.fold(Applicative[F].unit)(ps => Program.instance[F](ps).void))
+      .flatMap(_.fold(Applicative[F].unit)(ps => task[F](ps).void))
       .as(ExitCode.Success)
   }
+
+  def task[F[_]: ConcurrentEffect: ContextShift: Timer](params: Params): F[Unit] = {
+    Environment
+      .create(params)
+      .use(entrypoint[F])
+      .widen
+  }
+
+  def entrypoint[F[_]: Sync](env: Environment[F]): F[Unit] = {
+    Applicative[F].unit
+      .flatMap(_ => Ref.of(State(0, Nil)))
+      .flatMap(cache => Program.interpret(env, cache)(ProgramEvent.Search(1)))
+  }
+
 }

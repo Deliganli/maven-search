@@ -22,6 +22,7 @@ case class Environment[F[_]](
   terminal: Terminal[F],
   clipboard: Clipboard[F],
   formatter: Formatter[Sbt],
+  transformer: Transformer,
   maven: MavenClient[F])
 
 object Environment {
@@ -32,8 +33,9 @@ object Environment {
       config      <- Resource.liftF(loadConfig(params))
       clipboard   <- Resource.liftF(Clipboard.system[F])
       mavenClient <- Resource.pure[F, MavenClient[F]](buildMavenClient(logger, config, params))
-      terminal    <- Terminal.kek[F]
-    } yield Environment(params, config, logger, terminal, clipboard, Formatter.sbt, mavenClient)
+      terminal    <- Terminal.sync[F]
+      transformer <- Resource.pure[F, Transformer](Transformer.dsl[F](config))
+    } yield Environment(params, config, logger, terminal, clipboard, Formatter.sbt, transformer, mavenClient)
   }
 
   private def loadConfig[F[_]: Sync](params: Params): F[Config] = {
