@@ -1,0 +1,274 @@
+{
+  "responseHeader": {
+    "status": 0,
+    "QTime": 6,
+    "params": {
+      "q": "c:Applicative ",
+      "hl.snippets": "3",
+      "core": "",
+      "hl": "true",
+      "indent": "off",
+      "fl": "id,g,a,v,p,ec,timestamp,tags",
+      "start": "",
+      "hl.fl": "fch",
+      "sort": "score desc,timestamp desc,g asc,a asc,v desc",
+      "rows": "10",
+      "wt": "json",
+      "version": "2.2"
+    }
+  },
+  "response": {
+    "numFound": 4944,
+    "start": 0,
+    "docs": [
+      {
+        "id": "xyz.funjava.functional:higherkinded:0.0.1",
+        "g": "xyz.funjava.functional",
+        "a": "higherkinded",
+        "latestVersion": "0.0.1",
+        "p": "jar",
+        "timestamp": 1525013789000,
+        "ec": [
+          "-javadoc.jar",
+          "-sources.jar",
+          ".jar",
+          ".pom"
+        ],
+        "tags": [
+          "basic",
+          "library",
+          "higher",
+          "java",
+          "providing",
+          "kinded",
+          "types"
+        ]
+      },
+      {
+        "id": "com.propensive:mercator_sjs0.6_2.13:0.3.0",
+        "g": "com.propensive",
+        "a": "mercator_sjs0.6_2.13",
+        "latestVersion": "0.3.0",
+        "p": "jar",
+        "timestamp": 1575476440000,
+        "ec": [
+          "-sources.jar",
+          "-javadoc.jar",
+          ".jar",
+          ".pom"
+        ],
+        "tags": [
+          "mercator"
+        ]
+      },
+      {
+        "id": "com.propensive:mercator_2.13:0.3.0",
+        "g": "com.propensive",
+        "a": "mercator_2.13",
+        "latestVersion": "0.3.0",
+        "p": "jar",
+        "timestamp": 1575476434000,
+        "ec": [
+          "-sources.jar",
+          "-javadoc.jar",
+          ".jar",
+          ".pom"
+        ],
+        "tags": [
+          "mercator"
+        ]
+      },
+      {
+        "id": "com.propensive:mercator_sjs0.6_2.12:0.3.0",
+        "g": "com.propensive",
+        "a": "mercator_sjs0.6_2.12",
+        "latestVersion": "0.3.0",
+        "p": "jar",
+        "timestamp": 1575476338000,
+        "ec": [
+          "-sources.jar",
+          "-javadoc.jar",
+          ".jar",
+          ".pom"
+        ],
+        "tags": [
+          "mercator"
+        ]
+      },
+      {
+        "id": "com.propensive:mercator_2.12:0.3.0",
+        "g": "com.propensive",
+        "a": "mercator_2.12",
+        "latestVersion": "0.3.0",
+        "p": "jar",
+        "timestamp": 1575476330000,
+        "ec": [
+          "-javadoc.jar",
+          "-sources.jar",
+          ".jar",
+          ".pom"
+        ],
+        "tags": [
+          "mercator"
+        ]
+      },
+      {
+        "id": "io.javaslang:javaslang-pure:2.0.6",
+        "g": "io.javaslang",
+        "a": "javaslang-pure",
+        "latestVersion": "2.0.6",
+        "p": "jar",
+        "timestamp": 1491292607000,
+        "ec": [
+          "-javadoc.jar",
+          "-sources.jar",
+          ".jar",
+          ".pom"
+        ],
+        "tags": [
+          "purely",
+          "javaslang",
+          "functional",
+          "layer",
+          "above"
+        ]
+      },
+      {
+        "id": "io.javaslang:javaslang-pure:2.0.5",
+        "g": "io.javaslang",
+        "a": "javaslang-pure",
+        "latestVersion": "2.0.5",
+        "p": "jar",
+        "timestamp": 1479773805000,
+        "ec": [
+          "-javadoc.jar",
+          "-sources.jar",
+          ".jar",
+          ".pom"
+        ],
+        "tags": [
+          "purely",
+          "javaslang",
+          "functional",
+          "layer",
+          "above"
+        ]
+      },
+      {
+        "id": "io.javaslang:javaslang-pure:2.0.4",
+        "g": "io.javaslang",
+        "a": "javaslang-pure",
+        "latestVersion": "2.0.4",
+        "p": "jar",
+        "timestamp": 1475458088000,
+        "ec": [
+          "-sources.jar",
+          "-javadoc.jar",
+          ".jar",
+          ".pom"
+        ],
+        "tags": [
+          "purely",
+          "javaslang",
+          "functional",
+          "layer",
+          "above"
+        ]
+      },
+      {
+        "id": "io.javaslang:javaslang-pure:2.0.3",
+        "g": "io.javaslang",
+        "a": "javaslang-pure",
+        "latestVersion": "2.0.3",
+        "p": "jar",
+        "timestamp": 1471910032000,
+        "ec": [
+          "-sources.jar",
+          "-javadoc.jar",
+          ".jar",
+          ".pom"
+        ],
+        "tags": [
+          "purely",
+          "javaslang",
+          "functional",
+          "layer",
+          "above"
+        ]
+      },
+      {
+        "id": "io.javaslang:javaslang-pure:2.0.2",
+        "g": "io.javaslang",
+        "a": "javaslang-pure",
+        "latestVersion": "2.0.2",
+        "p": "jar",
+        "timestamp": 1459442848000,
+        "ec": [
+          "-sources.jar",
+          "-javadoc.jar",
+          ".jar",
+          ".pom"
+        ],
+        "tags": [
+          "purely",
+          "javaslang",
+          "functional",
+          "layer",
+          "above"
+        ]
+      }
+    ]
+  },
+  "highlighting": {
+    "xyz.funjava.functional:higherkinded:0.0.1": {
+      "fch": [
+        "xyz.funjava.functional.higherkinded.<em>applicative<\/em>.<em>Applicative<\/em>"
+      ]
+    },
+    "com.propensive:mercator_sjs0.6_2.13:0.3.0": {
+      "fch": [
+        "mercator.<em>Applicative<\/em>"
+      ]
+    },
+    "com.propensive:mercator_2.13:0.3.0": {
+      "fch": [
+        "mercator.<em>Applicative<\/em>"
+      ]
+    },
+    "com.propensive:mercator_sjs0.6_2.12:0.3.0": {
+      "fch": [
+        "mercator.<em>Applicative<\/em>"
+      ]
+    },
+    "com.propensive:mercator_2.12:0.3.0": {
+      "fch": [
+        "mercator.<em>Applicative<\/em>"
+      ]
+    },
+    "io.javaslang:javaslang-pure:2.0.6": {
+      "fch": [
+        "javaslang.algebra.<em>Applicative<\/em>"
+      ]
+    },
+    "io.javaslang:javaslang-pure:2.0.5": {
+      "fch": [
+        "javaslang.algebra.<em>Applicative<\/em>"
+      ]
+    },
+    "io.javaslang:javaslang-pure:2.0.4": {
+      "fch": [
+        "javaslang.algebra.<em>Applicative<\/em>"
+      ]
+    },
+    "io.javaslang:javaslang-pure:2.0.3": {
+      "fch": [
+        "javaslang.algebra.<em>Applicative<\/em>"
+      ]
+    },
+    "io.javaslang:javaslang-pure:2.0.2": {
+      "fch": [
+        "javaslang.algebra.<em>Applicative<\/em>"
+      ]
+    }
+  }
+}
