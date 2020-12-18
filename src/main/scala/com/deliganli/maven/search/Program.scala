@@ -1,6 +1,5 @@
 package com.deliganli.maven.search
 
-import cats.effect.concurrent.Ref
 import cats.implicits._
 import cats.{Applicative, Monad}
 import com.deliganli.maven.search.Domain.MavenModel
@@ -31,7 +30,7 @@ object Program {
 
   def interpret[F[_]: Monad](
     env: Environment[F],
-    state: Ref[F, State]
+    state: State
   )(
     event: ProgramEvent
   ): F[Unit] = {
@@ -41,9 +40,9 @@ object Program {
       .flatMap {
         case Prompt =>
           def proceed(e: UserEvent): F[ProgramEvent] =
-            state.get
-              .flatTap(s => env.logger.debug(s"size: ${s.docs.size}, page:${s.page}"))
-              .map(s => env.transformer.userToProgram(s)(e))
+            Applicative[F].unit
+              .flatMap(_ => env.logger.debug(s"size: ${state.docs.size}, page:${state.page}"))
+              .map(_ => env.transformer.userToProgram(state)(e))
 
           def terminate(e: String): F[ProgramEvent] =
             env.terminal
@@ -56,37 +55,35 @@ object Program {
             .flatMap(e => interpret(env, state)(e))
 
         case Search(page) =>
-          def updateCache(m: MavenModel): F[Unit] =
-            state.update { s =>
-              val cursor = s.page * env.config.itemPerPage
-              if (cursor < s.docs.size) s.copy(page = page)
-              else State(page, s.docs ++ m.docs)
-            }
+          def updateCache(m: MavenModel): State = {
+            val cursor = state.page * env.config.itemPerPage
+            if (cursor < state.docs.size) state.copy(page = page)
+            else State(page, state.docs ++ m.docs)
+          }
 
           Applicative[F].unit
             .flatMap(_ => env.maven.search(page))
-            .flatTap(m => updateCache(m))
             .flatTap(m => env.terminal.printTable(m.docs.take(env.config.itemPerPage), page))
-            .flatMap(_ => interpret(env, state)(Prompt))
+            .map(m => updateCache(m))
+            .flatMap(updatedState => interpret(env, updatedState)(Prompt))
 
         case Move(page) =>
-          def updateCache(): F[List[MavenDoc]] =
-            state.modify { s =>
-              val updated = s.copy(page = page)
-              val from    = s.page * env.config.itemPerPage
-              val till    = from + env.config.itemPerPage
+          def updateCache(): (State, List[MavenDoc]) = {
+            val updated = state.copy(page = page)
+            val from    = state.page * env.config.itemPerPage
+            val till    = from + env.config.itemPerPage
 
-              (updated, s.docs.slice(from, till))
-            }
+            (updated, state.docs.slice(from, till))
+          }
 
-          Applicative[F].unit
-            .flatMap(_ => updateCache())
-            .flatTap(m => env.terminal.printTable(m, page))
-            .flatMap(_ => interpret(env, state)(Prompt))
+          Applicative[F]
+            .pure(updateCache())
+            .flatTap { case (_, m) => env.terminal.printTable(m, page) }
+            .flatMap { case (s, _) => interpret(env, s)(Prompt) }
 
         case Copy(selection) =>
-          Applicative[F].unit
-            .flatMap(_ => state.get.map(s => s.docs((s.page - 1) * env.config.itemPerPage + selection)))
+          Applicative[F]
+            .pure(state.docs((state.page - 1) * env.config.itemPerPage + selection))
             .map(doc => env.formatter.format(doc))
             .flatTap(fs => env.clipboard.set(fs))
             .flatTap(fs => env.terminal.putStrLn(s"Copied to clipboard: $fs"))

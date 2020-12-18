@@ -1,7 +1,6 @@
 package com.deliganli.maven.search
 
 import cats.Applicative
-import cats.effect.concurrent.Ref
 import cats.effect.{ConcurrentEffect, ContextShift, ExitCode, IO, IOApp, Sync, Timer}
 import cats.implicits._
 import com.deliganli.maven.search.Program.{ProgramEvent, State}
@@ -25,9 +24,7 @@ object Main extends IOApp {
   }
 
   def entrypoint[F[_]: Sync](env: Environment[F]): F[Unit] = {
-    Applicative[F].unit
-      .flatMap(_ => Ref.of(State(0, Nil)))
-      .flatMap(cache => Program.interpret(env, cache)(ProgramEvent.Search(1)))
+    Program.interpret(env, State(0, Nil))(ProgramEvent.Search(1))
   }
 
 }
