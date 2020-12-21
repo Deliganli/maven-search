@@ -36,14 +36,14 @@ package object cmd {
         .optional()
         .action((x, p) => p.copy(importFormat = x.some))
         .text("Format to be copied to clipboard, e.g. sbt"),
-      opt[Boolean]('d', "debug")
+      opt[Unit]('d', "debug")
         .optional()
-        .action((x, p) => p.copy(debug = x.some))
+        .action((x, p) => p.copy(debug = true.some))
         .text("Debug mode"),
-      opt[Boolean]('c', "clear-screen")
+      opt[Unit]('c', "no-clear")
         .optional()
-        .action((x, p) => p.copy(clearScreen = x.some))
-        .text("Clear screen on each navigation activity"),
+        .action((x, p) => p.copy(clearScreen = false.some))
+        .text("Don't clear screen on each navigation activity"),
       arg[String]("<query string>")
         .action((x, p) => p.copy(query = x))
         .text("Query string to be searched in maven central")
