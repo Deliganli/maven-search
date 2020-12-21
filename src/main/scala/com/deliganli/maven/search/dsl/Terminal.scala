@@ -1,23 +1,23 @@
-package com.deliganli.maven.search
+package com.deliganli.maven.search.dsl
 
 import cats.effect.{Resource, Sync}
 import cats.implicits._
-import com.deliganli.maven.search.Domain.MavenModel.MavenDoc
-import com.deliganli.maven.search.Visual.{buildTable, message}
+import com.deliganli.maven.search.Params.Config
 import org.jline.terminal
 import org.jline.terminal.TerminalBuilder
+import org.jline.utils.InfoCmp.Capability
 
 trait Terminal[F[_]] {
   def readChar: F[String]
   def putStrLn(s: String): F[Unit]
-  def printTable(docs: List[MavenDoc], page: Int): F[Unit]
+  def printTable(table: String, page: Int, size: Int): F[Unit]
 }
 
 object Terminal {
 
   def apply[F[_]](implicit ev: Terminal[F]) = ev
 
-  def sync[F[_]: Sync]: Resource[F, Terminal[F]] = {
+  def sync[F[_]: Sync](config: Config): Resource[F, Terminal[F]] = {
     underlyingTerminalResource
       .flatTap(t => Resource.liftF(Sync[F].delay(t.enterRawMode())))
       .map { underlying =>
@@ -34,10 +34,12 @@ object Terminal {
             }
           }
 
-          def printTable(docs: List[MavenDoc], page: Int): F[Unit] = {
+          def printTable(table: String, page: Int, size: Int): F[Unit] = {
             Sync[F].delay {
-              underlying.writer.println(buildTable(docs))
-              underlying.writer.print(message(docs, page))
+              if (config.clearScreen) underlying.puts(Capability.clear_screen)
+              underlying.writer.println(table)
+              underlying.writer.print(message(size, page))
+              if (!config.clearScreen) underlying.writer.println()
               underlying.writer.flush()
             }
           }
@@ -58,4 +60,10 @@ object Terminal {
       .jna(true)
       .system(true)
       .dumb(true)
+
+  def message(size: Int, page: Int): String = {
+    val prev = if (page > 1) ", p:previous page" else ""
+    s"""Page:$page
+       |Select a number to copy to clipboard (1 - $size, n:next page$prev): """.stripMargin
+  }
 }

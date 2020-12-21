@@ -1,7 +1,6 @@
 package com.deliganli.maven.search
 
 import com.deliganli.maven.search.Domain.MavenModel.MavenDoc
-import org.http4s.Uri
 
 object Domain {
 
@@ -19,16 +18,27 @@ object Domain {
   sealed trait ImportFormat
 
   object ImportFormat {
-    class Sbt   extends ImportFormat
-    class Maven extends ImportFormat
+    case object Sbt     extends ImportFormat
+    //case object Maven   extends ImportFormat
+    case object Generic extends ImportFormat
   }
 
-  case class Config(
-    mavenUri: Uri,
-    chunkSize: Int,
-    itemPerPage: Int,
-    copyToClipboard: Boolean,
-    importFormat: ImportFormat,
-    debug: Boolean)
+  sealed trait ProgramEvent
+
+  object ProgramEvent {
+    case class Search(page: Int)    extends ProgramEvent
+    case object Prompt              extends ProgramEvent
+    case class Copy(selection: Int) extends ProgramEvent
+    case class Move(page: Int)      extends ProgramEvent
+    case object Exit                extends ProgramEvent
+  }
+
+  sealed trait UserEvent
+
+  object UserEvent {
+    case object Next             extends UserEvent
+    case object Prev             extends UserEvent
+    case class Selection(i: Int) extends UserEvent
+  }
 
 }

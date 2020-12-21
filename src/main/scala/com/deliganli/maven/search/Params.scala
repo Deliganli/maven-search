@@ -2,46 +2,43 @@ package com.deliganli.maven.search
 
 import cats.effect.Sync
 import com.deliganli.maven.search.Domain.ImportFormat
-import com.deliganli.maven.search.Domain.ImportFormat.{Maven, Sbt}
-import scopt.Read
+import com.deliganli.maven.search.commandline._
+import org.http4s.Uri
+import scopt.OParser
 
 case class Params(
-  query: String = "",
-  importFormat: Option[ImportFormat] = None,
-  copyToClipboard: Option[Boolean] = None,
-  debug: Option[Boolean] = None)
+  query: String,
+  mavenUri: Option[Uri],
+  chunkSize: Option[Int],
+  itemPerPage: Option[Int],
+  importFormat: Option[ImportFormat],
+  debug: Option[Boolean],
+  clearScreen: Option[Boolean])
 
 object Params {
-  import scopt.OParser
-  val builder = OParser.builder[Params]
 
-  implicit val read: Read[ImportFormat] = Read.reads {
-    case "sbt"   => new Sbt()
-    case "maven" => new Maven()
-  }
+  private def initializer = Params("", None, None, None, None, None, None)
 
-  val paramParser = {
-    import builder._
-    OParser.sequence(
-      programName("mvns"),
-      head("maven search", "0.1"),
-      arg[String]("<query string>")
-        .action((x, p) => p.copy(query = x))
-        .text("Query string to be searched in maven central"),
-      opt[Boolean]("no-copy")
-        .optional()
-        .action((x, p) => p.copy(copyToClipboard = Some(x)))
-        .text("Don't copy to clipboard, disables selection altogether"),
-      opt[ImportFormat]('f', "import-format")
-        .optional()
-        .action((x, p) => p.copy(importFormat = Some(x)))
-        .text("Format to be copied to clipboard, e.g. sbt"),
-      opt[Boolean]('d', "debug")
-        .optional()
-        .action((x, p) => p.copy(debug = Some(x)))
-        .text("Debug mode")
+  def parse[F[_]: Sync](args: List[String]): F[Option[Params]] = Sync[F].delay(OParser.parse(paramParser, args, initializer))
+
+  case class Config(
+    query: String,
+    mavenUri: Uri,
+    chunkSize: Int,
+    itemPerPage: Int,
+    importFormat: ImportFormat,
+    debug: Boolean,
+    clearScreen: Boolean)
+
+  def merge(params: Params, config: Config): Config = {
+    Config(
+      query = params.query,
+      mavenUri = params.mavenUri.getOrElse(config.mavenUri),
+      chunkSize = params.chunkSize.getOrElse(config.chunkSize),
+      itemPerPage = params.itemPerPage.getOrElse(config.itemPerPage),
+      importFormat = params.importFormat.getOrElse(config.importFormat),
+      debug = params.debug.getOrElse(config.debug),
+      clearScreen = params.clearScreen.getOrElse(config.clearScreen)
     )
   }
-
-  def parse[F[_]: Sync](args: List[String]): F[Option[Params]] = Sync[F].delay(OParser.parse(paramParser, args, Params()))
 }

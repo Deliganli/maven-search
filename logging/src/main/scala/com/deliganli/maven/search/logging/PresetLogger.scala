@@ -1,8 +1,8 @@
-package com.deliganli.core.logging
+package com.deliganli.maven.search.logging
 
 import cats.effect.{Concurrent, ContextShift, Resource, Timer}
-import io.odin._
 import io.odin.formatter.Formatter
+import io.odin.{asyncFileLogger, Level, Logger}
 
 object PresetLogger {
 

@@ -1,7 +1,7 @@
 package org.slf4j.impl
 
 import cats.effect.{Clock, ContextShift, Effect, IO, Timer}
-import com.deliganli.core.logging.PresetLogger
+import com.deliganli.maven.search.logging.PresetLogger
 import io.odin._
 import io.odin.slf4j.OdinLoggerBinder
 

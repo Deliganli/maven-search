@@ -4,28 +4,12 @@ lazy val `maven-search` =
   (project in file("."))
     .aggregate(logging)
     .dependsOn(logging)
-    .enablePlugins(UniversalPlugin, JvmPlugin)
+    .enablePlugins(JavaAppPackaging)
     .settings(
       name := "maven-search",
       common,
-      Deployment.assemblySettings,
-      libraryDependencies ++= Seq(
-        scopt,
-        "net.java.dev.jna" % "jna" % "5.6.0"
-        //"org.fusesource.jansi" % "jansi" % "1.18"
-      ) ++ Seq(
-        "org.jline" % "jline-terminal"     % Versions.jline,
-        "org.jline" % "jline-reader"       % Versions.jline,
-        "org.jline" % "jline-console"      % Versions.jline,
-        "org.jline" % "jline-terminal-jna" % Versions.jline
-        //"org.jline" % "jline-terminal-jansi" % Versions.jline
-      ) ++ Seq(
-        "io.circe" %% "circe-core" % Versions.circe,
-        circeConfig,
-        http4sCirce
-      )
-        ++ http4sClient
-        ++ scalatest
+      deployment,
+      libraryDependencies ++= Seq(scopt) ++ scalatest ++ jline.jna ++ circe ++ http4sClient
     )
 
 lazy val logging = (project in file("logging"))
@@ -43,4 +27,10 @@ lazy val common = Seq(
   scalacOptions ++= Seq("-deprecation", "-encoding", "UTF-8", "-language:higherKinds", "-language:postfixOps", "-feature"),
   addCompilerPlugin("com.olegpy"    %% "better-monadic-for" % "0.3.1"),
   addCompilerPlugin("org.typelevel" %% "kind-projector"     % "0.11.0" cross CrossVersion.full)
+)
+
+lazy val deployment = Seq(
+  maintainer := "Sait Sami Kocatas",
+  packageSummary := "Command line program searches given query on maven",
+  executableScriptName := "mvns"
 )

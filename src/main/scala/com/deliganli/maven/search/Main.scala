@@ -1,9 +1,8 @@
 package com.deliganli.maven.search
 
 import cats.Applicative
-import cats.effect.{ConcurrentEffect, ContextShift, ExitCode, IO, IOApp, Sync, Timer}
+import cats.effect.{ConcurrentEffect, ContextShift, ExitCode, IO, IOApp, Timer}
 import cats.implicits._
-import com.deliganli.maven.search.Program.{ProgramEvent, State}
 
 object Main extends IOApp {
 
@@ -18,13 +17,8 @@ object Main extends IOApp {
 
   def task[F[_]: ConcurrentEffect: ContextShift: Timer](params: Params): F[Unit] = {
     Environment
-      .create(params)
-      .use(entrypoint[F])
+      .create(getClass.getClassLoader, params)
+      .use(Interpreter.task[F])
       .widen
   }
-
-  def entrypoint[F[_]: Sync](env: Environment[F]): F[Unit] = {
-    Program.interpret(env, State(0, Nil))(ProgramEvent.Search(1))
-  }
-
 }

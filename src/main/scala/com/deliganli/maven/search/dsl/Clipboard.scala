@@ -1,4 +1,4 @@
-package com.deliganli.maven.search
+package com.deliganli.maven.search.dsl
 
 import java.awt.Toolkit
 import java.awt.datatransfer.StringSelection
