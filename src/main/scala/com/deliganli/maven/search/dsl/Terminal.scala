@@ -15,7 +15,7 @@ trait Terminal[F[_]] {
 
 object Terminal {
 
-  def apply[F[_]](implicit ev: Terminal[F]) = ev
+  def apply[F[_]](implicit ev: Terminal[F]): Terminal[F] = ev
 
   def sync[F[_]: Sync](config: Config): Resource[F, Terminal[F]] = {
     underlyingTerminalResource

@@ -3,7 +3,7 @@ package com.deliganli.maven.search.dsl
 import cats.effect.concurrent.Ref
 import cats.implicits._
 import cats.{Applicative, Monad}
-import com.deliganli.maven.search.Interpreter.State
+import com.deliganli.maven.search.Domain.State
 import com.deliganli.maven.search.Params.Config
 
 trait Copy[F[_]] {

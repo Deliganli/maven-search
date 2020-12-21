@@ -4,12 +4,11 @@ import cats.effect.concurrent.Ref
 import cats.effect.{ConcurrentEffect, ContextShift, Timer}
 import cats.implicits._
 import cats.{Applicative, Monad}
-import com.deliganli.maven.search.Domain.{ImportFormat, ProgramEvent}
+import com.deliganli.maven.search.Domain.{ImportFormat, ProgramEvent, State}
 import com.deliganli.maven.search.dsl.ModelOperator.{Generic, ScalaGrouped}
 import com.deliganli.maven.search.dsl.{ModelOperator, Program}
 
 object Interpreter {
-  case class State[A](page: Int, items: List[A])
 
   def task[F[_]: ConcurrentEffect: ContextShift: Timer](env: Environment[F]): F[Unit] = {
     env.config.importFormat match {

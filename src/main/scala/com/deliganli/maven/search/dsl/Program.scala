@@ -2,9 +2,8 @@ package com.deliganli.maven.search.dsl
 
 import cats.Monad
 import cats.effect.concurrent.Ref
-import com.deliganli.maven.search.Domain.ProgramEvent
+import com.deliganli.maven.search.Domain.{ProgramEvent, State}
 import com.deliganli.maven.search.Environment
-import com.deliganli.maven.search.Interpreter.State
 
 trait Program[F[_], A] {
   def search(page: Int): F[Unit]

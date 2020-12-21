@@ -18,7 +18,7 @@ object Domain {
   sealed trait ImportFormat
 
   object ImportFormat {
-    case object Sbt     extends ImportFormat
+    case object Sbt extends ImportFormat
     //case object Maven   extends ImportFormat
     case object Generic extends ImportFormat
   }
@@ -41,4 +41,5 @@ object Domain {
     case class Selection(i: Int) extends UserEvent
   }
 
+  case class State[A](page: Int, items: List[A])
 }

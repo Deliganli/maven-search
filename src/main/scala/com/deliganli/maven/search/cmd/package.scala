@@ -5,7 +5,7 @@ import com.deliganli.maven.search.Domain.ImportFormat
 import org.http4s.Uri
 import scopt.{OParser, Read}
 
-package object commandline {
+package object cmd {
   val builder = OParser.builder[Params]
 
   implicit val importFormat: Read[ImportFormat] = Read.reads {

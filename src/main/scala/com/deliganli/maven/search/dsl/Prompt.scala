@@ -3,8 +3,7 @@ package com.deliganli.maven.search.dsl
 import cats.effect.concurrent.Ref
 import cats.implicits._
 import cats.{Applicative, Monad}
-import com.deliganli.maven.search.Domain.{ProgramEvent, UserEvent}
-import com.deliganli.maven.search.Interpreter.State
+import com.deliganli.maven.search.Domain.{ProgramEvent, State, UserEvent}
 import io.odin.Logger
 
 trait Prompt[F[_]] {

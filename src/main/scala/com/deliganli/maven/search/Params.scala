@@ -2,7 +2,7 @@ package com.deliganli.maven.search
 
 import cats.effect.Sync
 import com.deliganli.maven.search.Domain.ImportFormat
-import com.deliganli.maven.search.commandline._
+import com.deliganli.maven.search.cmd._
 import org.http4s.Uri
 import scopt.OParser
 
