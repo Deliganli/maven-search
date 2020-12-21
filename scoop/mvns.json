@@ -1,0 +1,27 @@
+{
+  "version": "0.1.0",
+  "description": "Command line program searches given query on maven",
+  "homepage": "https://github.com/Deliganli/maven-search",
+  "bin": "bin/mvns.bat",
+  "extract_dir": "stage",
+  "checkver": "github",
+  "autoupdate": {
+    "architecture": {
+      "64bit": {
+        "url": "https://github.com/Deliganli/maven-search/releases/download/$version/mvns.zip"
+      }
+    }
+  },
+  "suggest": {
+    "JDK": [
+      "java/openjdk15",
+      "java/openjdk11"
+    ]
+  },
+  "architecture": {
+    "64bit": {
+      "url": "https://github.com/Deliganli/maven-search/releases/download/0.1.0/mvns.zip",
+      "hash": "c0060590da6bef5b69f122eaeb898379c21fc391a7ac6119042206388129c567"
+    }
+  }
+}
