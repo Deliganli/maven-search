@@ -1,8 +1,5 @@
 package com.deliganli.maven.search
 
-import java.net.http.HttpClient
-import java.time.Duration
-
 import cats.effect.{Concurrent, ConcurrentEffect, ContextShift, Resource, Sync, Timer}
 import cats.implicits._
 import com.deliganli.maven.search.Params.Config
@@ -39,7 +36,8 @@ object Environment {
   }
 
   private def buildLogger[F[_]: Concurrent: ContextShift: Timer](config: Config): Resource[F, Logger[F]] = {
-    if (config.debug) PresetLogger.default[F]() else Resource.pure[F, Logger[F]](Logger.noop[F])
+    if (config.debug) PresetLogger.default[F]()
+    else Resource.pure[F, Logger[F]](Logger.noop[F])
   }
 
   def loadConfig[F[_]: Sync](classLoader: ClassLoader, params: Params): F[Config] = {
@@ -47,17 +45,6 @@ object Environment {
       .fromEither(parser.decode[Config](ConfigFactory.load(classLoader).getConfig("maven-search"))(config))
       .map(config => Params.merge(params, config))
   }
-
-  private def defaultHttpClientBuilder[F[_]: ConcurrentEffect: ContextShift] = {
-    HttpClient
-      .newBuilder()
-      .version(HttpClient.Version.HTTP_2)
-      .connectTimeout(Duration.ofSeconds(60))
-  }
-
-  /*private def jdkHttpClient[F[_]: ConcurrentEffect: ContextShift]: Client[F] = {
-    JdkHttpClient(defaultHttpClientBuilder.build())
-  }*/
 
   private def loggingJdkHttpClient[F[_]: ConcurrentEffect: ContextShift](L: Logger[F], client: Client[F]): Client[F] = {
     val logger = (s: String) => L.debug(s)

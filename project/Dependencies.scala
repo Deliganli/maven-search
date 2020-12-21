@@ -33,11 +33,14 @@ object Dependencies {
     "org.typelevel" %% "cats-effect"
   ).map(_ % Versions.cats)
 
-  val http4sClient = Seq(
-    "org.http4s" %% "http4s-blaze-client"    % Versions.http4s,
-    "org.http4s" %% "http4s-circe"           % Versions.http4s,
-    "org.http4s" %% "http4s-jdk-http-client" % Versions.http4sJdk
-  )
+  object http4s {
+
+    def client =
+      Seq(
+        "org.http4s" %% "http4s-blaze-client",
+        "org.http4s" %% "http4s-circe"
+      ).map(_ % Versions.http4s)
+  }
 
   val odin = Seq(
     "com.github.valskalla" %% "odin-core",

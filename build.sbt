@@ -9,7 +9,7 @@ lazy val `maven-search` =
       name := "maven-search",
       common,
       deployment,
-      libraryDependencies ++= Seq(scopt) ++ scalatest ++ jline.jna ++ circe ++ http4sClient
+      libraryDependencies ++= Seq(scopt) ++ scalatest ++ jline.jna ++ circe ++ http4s.client
     )
 
 lazy val logging = (project in file("logging"))
