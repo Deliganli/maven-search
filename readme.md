@@ -1,13 +1,14 @@
 Search packages in maven through console, sbt style dependency string can be copied to clipboard
 
-##Installation
+## Installation
 
-###Scoop
+### Scoop
 
 ```bash
 scoop install https://raw.githubusercontent.com/Deliganli/maven-search/master/scoop/mvns.json
 ```
-###Binaries
+### Binaries
+
 https://github.com/Deliganli/maven-search/releases
 
 latest can be downloaded and extracted it somewhere
