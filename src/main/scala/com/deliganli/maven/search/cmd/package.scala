@@ -20,9 +20,6 @@ package object cmd {
     OParser.sequence(
       programName("mvns"),
       head("maven search", "0.1"),
-      arg[String]("<query string>")
-        .action((x, p) => p.copy(query = x))
-        .text("Query string to be searched in maven central"),
       opt[Uri]("maven-uri")
         .optional()
         .action((x, p) => p.copy(mavenUri = x.some))
@@ -46,7 +43,10 @@ package object cmd {
       opt[Boolean]('c', "clear-screen")
         .optional()
         .action((x, p) => p.copy(clearScreen = x.some))
-        .text("Clear screen on each navigation activity")
+        .text("Clear screen on each navigation activity"),
+      arg[String]("<query string>")
+        .action((x, p) => p.copy(query = x))
+        .text("Query string to be searched in maven central")
     )
   }
 }

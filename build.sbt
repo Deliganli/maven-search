@@ -22,7 +22,7 @@ lazy val logging = (project in file("logging"))
 lazy val common = Seq(
   maintainer := "saitkocatas@gmail.com",
   organization := "com.deliganli",
-  version := "0.1.0",
+  version := "0.1.1",
   scalaVersion := "2.13.3",
   scalacOptions ++= Seq("-deprecation", "-encoding", "UTF-8", "-language:higherKinds", "-language:postfixOps", "-feature"),
   addCompilerPlugin("com.olegpy"    %% "better-monadic-for" % "0.3.1"),
@@ -32,5 +32,6 @@ lazy val common = Seq(
 lazy val deployment = Seq(
   maintainer := "Sait Sami Kocatas",
   packageSummary := "Command line program searches given query on maven",
-  executableScriptName := "mvns"
+  executableScriptName := "mvns",
+  mappings in Universal += (resourceDirectory in Compile).value / "reference.conf" -> "conf/reference.conf"
 )
