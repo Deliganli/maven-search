@@ -9,9 +9,9 @@ scoop install https://raw.githubusercontent.com/Deliganli/maven-search/master/sc
 ```
 ### Binaries
 
-https://github.com/Deliganli/maven-search/releases
+latest can be downloaded below;
 
-latest can be downloaded and extracted it somewhere
+https://github.com/Deliganli/maven-search/releases
 
 ## Usage
 

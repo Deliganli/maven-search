@@ -1,5 +1,6 @@
 package com.deliganli.maven.search
 
+import cats.Parallel
 import cats.effect.{Concurrent, ConcurrentEffect, ContextShift, Resource, Sync, Timer}
 import cats.implicits._
 import com.deliganli.maven.search.Params.Config
@@ -24,14 +25,16 @@ case class Environment[F[_]](
 
 object Environment {
 
-  def create[F[_]: ConcurrentEffect: ContextShift: Timer](loader: ClassLoader, params: Params): Resource[F, Environment[F]] = {
+  def create[F[_]: Parallel: ConcurrentEffect: ContextShift: Timer](loader: ClassLoader, params: Params): Resource[F, Environment[F]] = {
     for {
-      config      <- Resource.liftF[F, Config](loadConfig(loader, params))
-      logger      <- buildLogger[F](config)
-      clipboard   <- Resource.liftF[F, Clipboard[F]](Clipboard.system[F])
-      terminal    <- Terminal.sync[F](config)
+      config <- Resource.liftF[F, Config](loadConfig(loader, params))
+      (logger, terminal, clipboard, eventMapper) <- (
+          buildLogger[F](config),
+          Terminal.sync[F](config),
+          Resource.liftF[F, Clipboard[F]](Clipboard.system[F]),
+          Resource.pure[F, EventMapper](EventMapper.dsl(config))
+      ).parTupled
       mavenClient <- buildMavenClient(logger, config)
-      eventMapper <- Resource.pure[F, EventMapper](EventMapper.dsl(config))
     } yield Environment(config, logger, terminal, clipboard, eventMapper, mavenClient)
   }
 
